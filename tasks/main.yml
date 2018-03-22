@@ -1,0 +1,22 @@
+---
+
+- set_fact:
+   acceptable_os: ['Debian']
+
+- name: Stop run if OS not supported
+  fail:
+    msg: "OS {{ansible_os_family}} is not supported"
+  when: ansible_os_family not in acceptable_os
+
+- name: Install GitLab Runner ({{ansible_os_family}})
+  include: "install-{{ansible_os_family}}.yml"
+
+- name: Set global options
+  import_tasks: global-setup.yml
+
+- name: Register GitLab Runner
+  include_tasks: register-runner.yml
+  when: item.token != ''
+  with_items: "{{ gitlab_runner_list }}"
+  loop_control:
+      loop_var: runner

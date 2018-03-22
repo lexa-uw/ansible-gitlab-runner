@@ -1,0 +1,20 @@
+---
+- name: List configured runners
+  become: true
+  command: gitlab-runner list
+  register: configured_runners
+  changed_when: False
+
+- name: Create command for register gitlab-runner
+  set_fact:
+    command: "gitlab-runner register --non-interactive --name '{{runner.name}}'"
+
+- name: Add extra options to command
+  set_fact:
+    command: "{{command}} --{{item.key}} {{item.value}}"
+  with_dict: "{{runner.options}}"
+
+- name: Register runner to GitLab
+  become: true
+  command: "{{command | replace('\n', '')}}"
+  when: configured_runners.stderr.find('\n' + runner.name) == -1

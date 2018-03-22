@@ -1,0 +1,37 @@
+---
+- name: Check source list for GitLab exists
+  register: check_source_list
+  stat:
+    path: /etc/apt/sources.list.d/runner_gitlab-runner.list
+
+- name: Download script for setup GitLab's official repository
+  register: script_for_setup_gitlab_repo
+  get_url:
+    url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.deb.sh"
+    dest: /tmp/gitlab-runner.script.deb.sh
+    mode: "0744"
+    checksum: md5:c96f2b856d12085e8639eacece674af3
+  when: check_source_list.stat.exists == False
+
+- name: Setup GitLab's official repository
+  become: true
+  command: /tmp/gitlab-runner.script.deb.sh
+  register: command_result
+  changed_when: "command_result.stdout is search('The repository is setup')"
+  when: check_source_list.stat.exists == False
+
+- set_fact:
+    gitlab_runner_package: "{{ gitlab_runner_package_name }}={{ gitlab_runner_package_version }}"
+    gitlab_runner_package_state: "present"
+  when: gitlab_runner_package_version != False
+
+- set_fact:
+    gitlab_runner_package: "{{ gitlab_runner_package_name }}"
+    gitlab_runner_package_state: "latest"
+  when: gitlab_runner_package_version == False
+
+- name: Install GitLab Runner
+  become: true
+  apt:
+    name: "{{ gitlab_runner_package }}"
+    state: "{{ gitlab_runner_package_state }}"

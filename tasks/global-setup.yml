@@ -1,0 +1,16 @@
+---
+- name: Set GitLab runner options
+  become: true
+  notify: ["Restart GitLab runner"]
+  lineinfile:
+    dest: /etc/gitlab-runner/config.toml
+    regexp: "{{item.regexp}}"
+    line: "{{item.line}}"
+    state: present
+    backrefs: yes
+  with_items:
+    - {regexp: '^(\s*)concurrent =' , line: '\1concurrent = {{ gitlab_runner_config_concurrent }}'}
+    - {regexp: '^(\s*)log_level =' , line: '\1check_interval = {{ gitlab_runner_config_log_level }}'}
+    - {regexp: '^(\s*)check_interval =' , line: '\1check_interval = {{ gitlab_runner_config_check_interval }}'}
+    - {regexp: '^(\s*)sentry_dsn =' , line: '\1sentry_dsn = {{ gitlab_runner_config_sentry_dsn }}'}
+    - {regexp: '^(\s*)metrics_server =' , line: '\1metrics_server = {{ gitlab_runner_config_metrics_server }}'}

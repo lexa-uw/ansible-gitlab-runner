@@ -1,0 +1,23 @@
+---
+galaxy_info:
+  author: Alexey Tishkov
+  description: GitLab Runner
+  license: MIT
+  min_ansible_version: 2.4
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  - name: Debian
+    version:
+    - all
+  - name: CentOS
+    version:
+    - all
+  galaxy_tags:
+    - gitlab
+    - runner
+    - ci
+
+dependencies: []
+
