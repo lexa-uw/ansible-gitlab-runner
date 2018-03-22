@@ -1,0 +1,12 @@
+---
+# Change this variable value to 'gitlab-ci-multi-runner' for versions <= 10.x
+gitlab_runner_package_name: 'gitlab-runner'
+gitlab_runner_package_version: 10.6.0
+
+gitlab_runner_config_concurrent: '{{ ansible_processor_vcpus }}'
+gitlab_runner_config_log_level: info
+gitlab_runner_config_check_interval: 0
+gitlab_runner_config_sentry_dsn:
+gitlab_runner_config_metrics_server:
+
+gitlab_runner_list: []
