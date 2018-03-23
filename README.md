@@ -21,6 +21,10 @@ a version <= 10.x you will need to define this variable `gitlab_runner_package_n
 `gitlab_runner_package_version`
 GitLab's runner version to install.(_default: 10.6.0_)
 
+`gitlab_runner_source_list_checksum`
+Hash of installer [file](https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh)([for 
+version <10](https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner/script.deb.sh)).
+
 ### GitLab's common settings:
 
 `gitlab_runner_config_concurrent`
@@ -61,6 +65,7 @@ Install role: `ansible-galaxy install -r ./requirements.yml --roles-path ./roles
 
 Playbook example:
 ----------------
+### Install version >=10
 ```yaml
 - hosts: all
   vars_files:
@@ -72,6 +77,7 @@ Playbook example:
 Inside `vars/main.yml`
 ```yaml
 gitlab_runner_package_version: 10.5.0
+gitlab_runner_list:
   - name: First shell runner
     options:
       leave-runner:
@@ -88,4 +94,29 @@ gitlab_runner_package_version: 10.5.0
       executor: 'shell'
       limit: 2
       cache-dir: "/tmp/cache-runner-2"
+```
+
+### Install version <10
+```yaml
+- hosts: all
+  vars_files:
+    - vars/main.yml
+  roles:
+    - { role: gitlab-runner }
+```
+
+Inside `vars/main.yml`
+```yaml
+gitlab_runner_package_version: 9.5.1
+gitlab_runner_package_name: 'gitlab-ci-multi-runner'
+gitlab_runner_source_list_checksum: md5:092e775bc01064171166a113bc52aa09
+gitlab_runner_list:
+  - name: First shell runner
+    options:
+      leave-runner:
+      url: 'https://gitlab.com/'
+      registration-token: '123abc'
+      executor: 'shell'
+      limit: 2
+      cache-dir: "/tmp/cache-runner-1"
 ```
