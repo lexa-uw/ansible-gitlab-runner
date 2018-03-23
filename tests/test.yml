@@ -1,0 +1,60 @@
+---
+- name: Setup docker environment
+  hosts: localhost
+  vars:
+    image_name: docker-debian
+  tasks:
+    - name: Build images
+      docker_image:
+        path: ./docker/debian
+        name: "{{image_name}}"
+        tag: latest
+    - name: Bring up linked docker container
+      include_role:
+        name: provision_docker
+      vars:
+        inventory:
+          - name: docker
+            image: "{{image_name}}:latest"
+        provision_docker_inventory: "{{ inventory }}"
+        provision_docker_use_docker_connection: true
+
+- name: Check installing version >10
+  hosts: [docker]
+  vars:
+    gitlab_runner_package_version: 10.5.0
+  tasks:
+    - name: Run on the scratch
+      include_role:
+        name: app
+    - name: Run on the configured
+      include_role:
+        name: app
+
+    - name: Check gitlab-runner was installed
+      become: true
+      command: gitlab-runner --version
+      register: command_result
+      changed_when: "command_result.stdout is search(gitlab_runner_package_version)"
+    - fail:
+        msg: "Package gitlab-runner:{{gitlab_runner_package_version}} was not installed"
+      when: command_result.changed != True
+
+- name: Check installing version <10
+  hosts: [docker]
+  vars:
+    gitlab_runner_package_version: 9.5.1
+    gitlab_runner_package_name: 'gitlab-ci-multi-runner'
+    gitlab_runner_source_list_checksum: md5:092e775bc01064171166a113bc52aa09
+  tasks:
+    - include_role:
+        name: app
+
+    - name: Check gitlab-runner was installed
+      become: true
+      command: gitlab-runner --version
+      register: command_result
+      changed_when: "command_result.stdout is search(gitlab_runner_package_version)"
+    - fail:
+        msg: "Package gitlab-runner:{{gitlab_runner_package_version}} was not installed"
+      when: command_result.changed != True
