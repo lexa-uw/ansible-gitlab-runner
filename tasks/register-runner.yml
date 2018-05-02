@@ -11,7 +11,7 @@
 
 - name: Add extra options to command
   set_fact:
-    command: "{{command}} --{{item.key}} {{item.value}}"
+    command: "{{command}} --{{item.key}}={{item.value}}"
   with_dict: "{{runner.options}}"
 
 - name: Register runner to GitLab
