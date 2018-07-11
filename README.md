@@ -48,7 +48,7 @@ More information about this options you can find
 
 ### Runner options:
 `gitlab_runner_list`
-Array of key => value options which role use for create command to register runner.
+Array of of runner name and key => value options which role use for create command to register runner.
 For more information use `gitlab-runner register --help` in your console 
 or see the [options for runner](https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runners-section)
 
@@ -57,7 +57,7 @@ Add role to project:
 Add role into your requirements(_requirements.yml_ for example):
 ```yaml
 - src: https://github.com/lexa-uw/ansible-gitlab-runner
-  version: v1.0.1
+  version: v1.2.0
   name: gitlab-runner
 ```
 
@@ -76,7 +76,7 @@ Playbook example:
 
 Inside `vars/main.yml`
 ```yaml
-gitlab_runner_package_version: 10.5.0
+gitlab_runner_package_version: 11.0.0
 gitlab_runner_list:
   - name: First shell runner
     options:

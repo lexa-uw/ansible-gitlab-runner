@@ -1,7 +1,7 @@
 ---
 # Change this variable value to 'gitlab-ci-multi-runner' for versions <= 10.x
 gitlab_runner_package_name: 'gitlab-runner'
-gitlab_runner_package_version: 10.6.0
+gitlab_runner_package_version: 11.0.0
 gitlab_runner_source_list_checksum: md5:c96f2b856d12085e8639eacece674af3
 #gitlab_runner_source_list_checksum: md5:092e775bc01064171166a113bc52aa09 # For version <10
 

@@ -16,7 +16,7 @@
 
 - name: Register GitLab Runner
   include_tasks: register-runner.yml
-  when: item.token != ''
+  when: runner.options['registration-token'] != ''
   with_items: "{{ gitlab_runner_list }}"
   loop_control:
       loop_var: runner
