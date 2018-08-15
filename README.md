@@ -50,8 +50,8 @@ More information about this options you can find
 `gitlab_runner_list`
 Array of of runner name and key => value options which role use for create command to register runner.
 For more information use `gitlab-runner register --help` in your console 
-or see the [options for runner](https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runners-section)
-From version 1.3.0 this role supports for "array" options(```docker-volumes``` for examplei, see example).
+or see the [options for runner](https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runners-section).
+From version 1.3.0 this role supports for "array" options(```docker-volumes``` for example, see example).
 
 Add role to project:
 ----------------
