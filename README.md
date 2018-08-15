@@ -51,13 +51,14 @@ More information about this options you can find
 Array of of runner name and key => value options which role use for create command to register runner.
 For more information use `gitlab-runner register --help` in your console 
 or see the [options for runner](https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runners-section)
+From version 1.3.0 this role supports for "array" options(```docker-volumes``` for examplei, see example).
 
 Add role to project:
 ----------------
 Add role into your requirements(_requirements.yml_ for example):
 ```yaml
 - src: https://github.com/lexa-uw/ansible-gitlab-runner
-  version: v1.2.0
+  version: v1.3.0
   name: gitlab-runner
 ```
 
@@ -76,24 +77,27 @@ Playbook example:
 
 Inside `vars/main.yml`
 ```yaml
-gitlab_runner_package_version: 11.0.0
+gitlab_runner_package_version: 11.1.0
 gitlab_runner_list:
   - name: First shell runner
     options:
-      leave-runner:
-      url: 'https://gitlab.com/'
-      registration-token: '123abc'
-      executor: 'shell'
-      limit: 2
       cache-dir: "/tmp/cache-runner-1"
-  - name: Second shell runner
-    options:
-      leave-runner:
-      url: 'https://example.com/'
-      registration-token: '789xyz'
       executor: 'shell'
+      leave-runner:
       limit: 2
-      cache-dir: "/tmp/cache-runner-2"
+      registration-token: '123abc'
+      url: 'https://gitlab.com/'
+  - name: Second docker executor runner
+    options:
+      docker-image: '"alpine:3.7"'
+      docker-volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
+      executor: 'docker'
+      leave-runner:
+      limit: 2
+      registration-token: '789xyz'
+      tag-list: '"docker-in-docker"'
+      url: 'https://example.com/'
 ```
 
 ### Install version <10

@@ -10,9 +10,16 @@
     command: "gitlab-runner register --non-interactive --name '{{runner.name}}'"
 
 - name: Add extra options to command
+  when: "item.value is not iterable or item.value is string"
+  with_dict: "{{runner.options}}"
   set_fact:
     command: "{{command}} --{{item.key}}={{item.value}}"
+
+- name: Add extra options to command
+  when: "item.value is iterable and item.value is not string"
   with_dict: "{{runner.options}}"
+  set_fact:
+    command: "{{command}} {% for param in item.value %} --{{item.key}}=\"{{param}}\"{% endfor %}"
 
 - name: Register runner to GitLab
   become: true
